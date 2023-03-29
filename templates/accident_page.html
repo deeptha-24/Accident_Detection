@@ -1,0 +1,518 @@
+<!--<!DOCTYPE HTML>-->
+
+<!--<html>-->
+<!--   <head>-->
+<!--      <title>Accident Detection</title>-->
+<!--      <meta charset="utf-8" />-->
+<!--      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />-->
+<!--      <link rel="stylesheet" href="static/assets/css/main.css" />-->
+<!--      <noscript><link rel="stylesheet" href="static/assets/css/noscript.css" /></noscript>-->
+<!--      <script src="https://apis.mapmyindia.com/advancedmaps/v1/<token>/map_load?v=1.5"></script>-->
+<!--      <script src="https://apis.mapmyindia.com/advancedmaps/api/<token>/map_sdk_plugins"></script>-->
+<!--      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--&lt;!&ndash;      <script>&ndash;&gt;-->
+<!--&lt;!&ndash;         ..hidden {&ndash;&gt;-->
+<!--&lt;!&ndash;  display: none;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--&lt;!&ndash;#accident-button {&ndash;&gt;-->
+<!--&lt;!&ndash;  background-color: red;&ndash;&gt;-->
+<!--&lt;!&ndash;  color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;  padding: 10px 20px;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+<!--&lt;!&ndash;      </script>&ndash;&gt;-->
+
+<!--&lt;!&ndash;      <script>&ndash;&gt;-->
+<!--&lt;!&ndash;   .hidden {&ndash;&gt;-->
+<!--&lt;!&ndash;    display: none;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;.visible {&ndash;&gt;-->
+<!--&lt;!&ndash;    display: block;&ndash;&gt;-->
+<!--&lt;!&ndash;    background-color: red;&ndash;&gt;-->
+<!--&lt;!&ndash;    color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;    padding: 10px 20px;&ndash;&gt;-->
+<!--&lt;!&ndash;    border-radius: 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;    font-size: 18px;&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;      </script>&ndash;&gt;-->
+<!--<style>-->
+<!--    .danger-alert {-->
+<!--    background-color: red;-->
+<!--    color: white;-->
+<!--    padding: 10px 20px;-->
+<!--    border-radius: 5px;-->
+<!--    font-size: 18px;-->
+<!--}-->
+<!--.danger-alert:hover {-->
+<!--    background-color: darkred;-->
+<!--    cursor: pointer;-->
+<!--}-->
+
+
+
+<!--    -->
+<!--</style>-->
+<!--   </head>-->
+<!--   <body class="is-preload landing">-->
+<!--      <div id="page-wrapper">-->
+
+<!--         &lt;!&ndash; Header &ndash;&gt;-->
+<!--            <header id="header">-->
+<!--               <nav id="nav">-->
+<!--                  <ul>-->
+
+<!--                     <li>-->
+
+<!--                        <ul>-->
+<!--                           <li>-->
+
+<!--                           <li>-->
+
+<!--                           </li>-->
+<!--                        </ul>-->
+<!--                     </li>-->
+
+<!--                     <li><a href="{{ url_for('home') }}" class="button primary">Logout</a></li>-->
+<!--                  </ul>-->
+<!--               </nav>-->
+<!--                </header>-->
+<!--            <section id="two" class="spotlight style2 right">-->
+<!--               <span width=100 height=200 class="image fit main"><img src="{{ url_for('video_feed') }}" alt="" /></span>-->
+<!--               <div class="content">-->
+<!--                  <header>-->
+<!--                     <h2>Accident detection</h2>-->
+<!--                     </header>-->
+
+<!--                     <div id="accident-probability">-->
+<!--&lt;!&ndash;               <a href="{{ url_for('accident_detected') }}" id="alert-button" style="display:none;" class="button primary">Accident Details</a>&ndash;&gt;-->
+<!--&lt;!&ndash;<div id="accident-probability"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;<button id="alert-button" style="display:none;">Accident Alert</button>&ndash;&gt;-->
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;                        const threshold = 0.9;&ndash;&gt;-->
+<!--&lt;!&ndash;setInterval(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;    fetch('/gets_accident_probability')&ndash;&gt;-->
+<!--&lt;!&ndash;        .then(response => response.json())&ndash;&gt;-->
+<!--&lt;!&ndash;        .then(data => {&ndash;&gt;-->
+<!--&lt;!&ndash;            if (data.accident_prob > threshold) {&ndash;&gt;-->
+<!--&lt;!&ndash;                document.getElementById('alert-button').className = "visible";&ndash;&gt;-->
+<!--&lt;!&ndash;            } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                document.getElementById('alert-button').className = "hidden";&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+<!--&lt;!&ndash;}, 1000);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        </script>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <button id="alert-button" class="hidden">Accident Alert</button>&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;                        <button id="alert-button" class="danger-alert" style="display:none;">Accident Alert</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;    setInterval(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;        fetch('/get_accident_probability')&ndash;&gt;-->
+<!--&lt;!&ndash;            .then(response => response.json())&ndash;&gt;-->
+<!--&lt;!&ndash;            .then(data => {&ndash;&gt;-->
+<!--&lt;!&ndash;                if (data.accident_prob === 1) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    document.getElementById('alert-button').style.display = "block";&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    document.getElementById('alert-button').style.display = "none";&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+<!--&lt;!&ndash;    }, 1000);&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+
+
+
+<!--                        # &lt;!&ndash;                      <button id="alert-button" class="danger-alert" style="display:none;">Accident Alert</button>&ndash;&gt;-->
+
+<!-- &lt;!&ndash;<button id="alert-button" class="{{ button_class }}">Accident Alert</button>&ndash;&gt;-->
+<!--<button id="accident-button" class="btn btn-default">Accident Alert</button>-->
+<!-- <script>-->
+<!--    setInterval(() => {-->
+<!--         fetch("/get_accident_probability")-->
+<!--         .then(res => res.json())-->
+<!--         .then(data => {-->
+<!--             const threshold = 0.9; // set your threshold here-->
+<!--             if (data.probability > threshold) {-->
+<!--                 document.getElementById("accident-button").classList.remove("btn-default");-->
+<!--                 document.getElementById("accident-button").classList.add("btn-danger");-->
+<!--             } else {-->
+<!--                 document.getElementById("accident-button").classList.remove("btn-danger");-->
+<!--                 document.getElementById("accident-button").classList.add("btn-default");-->
+<!--             }-->
+<!--         });-->
+<!--     }, 1000);-->
+<!-- </script>-->
+
+
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    setInterval(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;     fetch("/get_accident_probability")&ndash;&gt;-->
+<!--&lt;!&ndash;       .then(res => res.json())&ndash;&gt;-->
+<!--&lt;!&ndash;       .then(data => {&ndash;&gt;-->
+<!--&lt;!&ndash;          const threshold = 0.9; // set your threshold here&ndash;&gt;-->
+<!--&lt;!&ndash;           if (data.probability > threshold) {&ndash;&gt;-->
+
+<!--&lt;!&ndash;    document.getElementById("alert-button").classList.remove("hidden");&ndash;&gt;-->
+<!--&lt;!&ndash;   &ndash;&gt;-->
+<!--&lt;!&ndash;} else {&ndash;&gt;-->
+<!--&lt;!&ndash;    &ndash;&gt;-->
+<!--&lt;!&ndash;    document.getElementById("alert-button").classList.add("hidden");&ndash;&gt;-->
+<!--&lt;!&ndash;}&ndash;&gt;-->
+
+<!--&lt;!&ndash;       });&ndash;&gt;-->
+<!--&lt;!&ndash;      }, 1000);&ndash;&gt;-->
+
+
+
+
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--&lt;!&ndash;<a id="alert-button" class="hidden" href="{{ url_for('accident_detected') }}">Accident Details</a>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<a href="{{ url_for('accident_detected') }}"><button id="accident-button" style="visibility: hidden;" >Accident Alert</button></a>&ndash;&gt;-->
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;   setInterval(function() {&ndash;&gt;-->
+<!--&lt;!&ndash;    const xhr = new XMLHttpRequest();&ndash;&gt;-->
+<!--&lt;!&ndash;    xhr.open('GET', '/check_probability');&ndash;&gt;-->
+<!--&lt;!&ndash;    xhr.onload = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;        const response = JSON.parse(xhr.responseText);&ndash;&gt;-->
+<!--&lt;!&ndash;        const button = document.getElementById('accident-button');&ndash;&gt;-->
+<!--&lt;!&ndash;        if (response.visible) {&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            button.classList.remove('hidden');&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            button.style.visibility = "visible";&ndash;&gt;-->
+<!--&lt;!&ndash;        } else {&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;            button.classList.add('hidden');&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            button.style.visibility = "hidden";&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    };&ndash;&gt;-->
+<!--&lt;!&ndash;    xhr.send();&ndash;&gt;-->
+<!--&lt;!&ndash;}, 1000);&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;   const button = document.getElementById('accident-button');&ndash;&gt;-->
+<!--&lt;!&ndash;button.addEventListener("click", function(){&ndash;&gt;-->
+<!--&lt;!&ndash;    window.location.href = '/next_page';&ndash;&gt;-->
+<!--&lt;!&ndash;});&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+
+<!--</div>-->
+
+<!--               </div>-->
+<!--            </section>-->
+
+<!--         &lt;!&ndash; Footer &ndash;&gt;-->
+<!--            <footer id="footer">-->
+<!--               <ul class="icons">-->
+<!--                  <li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>-->
+<!--                  <li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>-->
+<!--                  <li><a href="#" class="icon brands alt fa-linkedin-in"><span class="label">LinkedIn</span></a></li>-->
+<!--                  <li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>-->
+<!--                  <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>-->
+<!--                  <li><a href="#" class="icon solid alt fa-envelope"><span class="label">Email</span></a></li>-->
+<!--               </ul>-->
+<!--               <ul class="copyright">-->
+<!--                  <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>-->
+<!--               </ul>-->
+<!--            </footer>-->
+
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Scripts &ndash;&gt;-->
+<!--         <script src="static/assets/js/jquery.min.js"></script>-->
+<!--         <script src="static/assets/js/jquery.scrolly.min.js"></script>-->
+<!--         <script src="static/assets/js/jquery.dropotron.min.js"></script>-->
+<!--         <script src="static/assets/js/jquery.scrollex.min.js"></script>-->
+<!--         <script src="static/assets/js/browser.min.js"></script>-->
+<!--         <script src="static/assets/js/breakpoints.min.js"></script>-->
+<!--         <script src="static/assets/js/util.js"></script>-->
+<!--         <script src="static/assets/js/main.js"></script>-->
+
+<!--   </body>-->
+<!--</html>-->
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Accident Detection</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="static/assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="static/assets/css/noscript.css"
+    /></noscript>
+    <script src="https://apis.mapmyindia.com/advancedmaps/v1/<token>/map_load?v=1.5"></script>
+    <script src="https://apis.mapmyindia.com/advancedmaps/api/<token>/map_sdk_plugins"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--        <script>-->
+    <!--            ..hidden {-->
+    <!--  display: none;-->
+    <!--}-->
+    <!--#accident-button {-->
+    <!--  background-color: red;-->
+    <!--  color: white;-->
+    <!--  padding: 10px 20px;-->
+    <!--}-->
+    <!--        </script>-->
+
+    <style>
+    button {
+			padding: 10px;
+			font-size: 16px;
+			background-color: red;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		button:disabled {
+			background-color: gray;
+			cursor: default;
+		}
+	</style>
+    <!--<style>-->
+    <!--    .danger-alert {-->
+    <!--    background-color: red;-->
+    <!--    color: white;-->
+    <!--    padding: 10px 20px;-->
+    <!--    border-radius: 5px;-->
+    <!--    font-size: 18px;-->
+    <!--}-->
+    <!--.danger-alert:hover {-->
+    <!--    background-color: darkred;-->
+    <!--    cursor: pointer;-->
+    <!--}-->
+
+    <!--    }-->
+    <!--</style>-->
+  </head>
+  <body class="is-preload landing">
+    <div id="page-wrapper">
+      <!-- Header -->
+      <header id="header">
+        <nav id="nav">
+          <ul>
+            <li>
+              <ul>
+                <li></li>
+
+                <li></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="{{ url_for('home') }}" class="button primary">Logout</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <section id="two" class="spotlight style2 right">
+        <span width="100" height="200" class="image fit main"
+          ><img src="{{ url_for('video_feed') }}" alt=""
+        /></span>
+        <div class="content">
+          <header>
+            <h2>Accident detection</h2>
+          </header>
+
+          <div id="accident-probability">
+            <!--                    <a href="{{ url_for('accident_detected') }}" id="alert-button" style="display:none;" class="button primary">Accident Details</a>-->
+            <!--<div id="accident-probability"></div>-->
+            <!--<button id="alert-button" style="display:none;">Accident Alert</button>-->
+            <!--<script>-->
+            <!--                                const threshold = 0.9;-->
+            <!--setInterval(() => {-->
+            <!--    fetch('/accident_prob')-->
+            <!--        .then(response => response.json())-->
+            <!--        .then(data => {-->
+            <!--            if (data.accident_prob > threshold) {-->
+            <!--                document.getElementById('alert-button').className = "visible";-->
+            <!--            } else {-->
+            <!--                document.getElementById('alert-button').className = "hidden";-->
+            <!--            }-->
+            <!--        });-->
+            <!--}, 1000);-->
+
+            <!--                                </script>-->
+
+            <!--                                <button id="alert-button" class="hidden">Accident Alert</button>-->
+
+            <!--                                <button id="alert-button" class="danger-alert" style="display:none;">Accident Alert</button>-->
+
+            <!--<script>-->
+            <!--    setInterval(() => {-->
+            <!--        fetch('/get_accident_probability')-->
+            <!--            .then(response => response.json())-->
+            <!--            .then(data => {-->
+            <!--                if (data.accident_prob === 1) {-->
+            <!--                    document.getElementById('alert-button').style.display = "block";-->
+            <!--                } else {-->
+            <!--                    document.getElementById('alert-button').style.display = "none";-->
+            <!--                }-->
+            <!--            });-->
+            <!--    }, 1000);-->
+            <!--</script>-->
+            <button onclick="location.href='/accident_detected'" id="accident-button" disabled>Accident Detected
+            </button>
+<!--            <a-->
+<!--              id="accident-button"-->
+<!--              class="hidden"-->
+<!--              href="{{ url_for('accident_detected') }}"-->
+<!--              >No Accident</a>-->
+
+
+            <!--<a href="{{ url_for('accident_detected') }}"><button id="accident-button" style="visibility: hidden;" >Accident Alert</button></a>-->
+            <!--<script>-->
+            <!--    setInterval(function() {-->
+            <!--    const xhr = new XMLHttpRequest();-->
+            <!--    xhr.open('GET', '/check_probability');-->
+            <!--    xhr.onload = function() {-->
+            <!--        const response = JSON.parse(xhr.responseText);-->
+            <!--        const button = document.getElementById('accident-button');-->
+            <!--        if (response.visible) {-->
+            <!--&lt;!&ndash;            button.classList.remove('hidden');&ndash;&gt;-->
+            <!--            button.style.visibility = "visible";-->
+            <!--        } else {-->
+            <!--&lt;!&ndash;            button.classList.add('hidden');&ndash;&gt;-->
+            <!--            button.style.visibility = "hidden";-->
+            <!--        }-->
+            <!--    };-->
+            <!--    xhr.send();-->
+            <!--}, 1000);-->
+            <!--</script>-->
+            <!--<script>-->
+            <!--    const button = document.getElementById('accident-button');-->
+            <!--button.addEventListener("click", function(){-->
+            <!--    window.location.href = '/next_page';-->
+            <!--});-->
+            <!--</script>-->
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <ul class="icons">
+          <li>
+            <a href="#" class="icon brands alt fa-twitter"
+              ><span class="label">Twitter</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="icon brands alt fa-facebook-f"
+              ><span class="label">Facebook</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="icon brands alt fa-linkedin-in"
+              ><span class="label">LinkedIn</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="icon brands alt fa-instagram"
+              ><span class="label">Instagram</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="icon brands alt fa-github"
+              ><span class="label">GitHub</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="icon solid alt fa-envelope"
+              ><span class="label">Email</span></a
+            >
+          </li>
+        </ul>
+        <ul class="copyright">
+          <li>&copy; Untitled. All rights reserved.</li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="static/assets/js/jquery.min.js"></script>
+    <script src="static/assets/js/jquery.scrolly.min.js"></script>
+    <script src="static/assets/js/jquery.dropotron.min.js"></script>
+    <script src="static/assets/js/jquery.scrollex.min.js"></script>
+    <script src="static/assets/js/browser.min.js"></script>
+    <script src="static/assets/js/breakpoints.min.js"></script>
+    <script src="static/assets/js/util.js"></script>
+    <script src="static/assets/js/main.js"></script>
+    <script>
+
+        /* setInterval(() => {
+         fetch("/get_accident_probability")
+
+           .then(res => res.json())
+           .then(data => {
+            console.log(data.accident_prob)
+              const threshold = 0.9; // set your threshold here
+              console.log(data.accident_prob<threshold)
+               if (data.accident_prob< threshold) {
+
+        document.getElementById("alert-button1").display = "visible"
+
+      } else {
+
+        document.getElementById("alert-button1").display = "none";
+
+      }
+
+           });
+          }, 1000);   */
+       /* var ans = 0;
+      fetch("/get_accident_probability")
+
+          .then(res => res.json())
+          .then(data => {
+           console.log(data.accident_prob)
+           ans = parseFloat(data.accident_prob);
+           console.log(ans + "Hoooo");
+             const threshold = 0.9; // set your threshold here
+             console.log(data.accident_prob<threshold)
+
+               const x = ans<0.5?true:false;
+               console.log(x+"check")
+                 if (x) {
+
+                     document.getElementById("alert-button1").style.display = "visible"
+
+                 } else {
+
+                   document.getElementById("alert-button1").innerHTML = "Accident Details";
+
+                 }
+          });
+
+          //document.getElementById("accident-probability").display = "visible"
+
+
+
+            //document.getElementById("alert-button1").style.display = "none";
+            console.log("hi")*/
+
+
+            $(document).ready(function() {
+			// disable button on page load
+			$('#accident-button').prop('disabled', true);
+			// send request to backend to get probability
+			$.getJSON('/get_accident_probability', function(data) {
+				// if probability is greater than threshold, enable button
+				if (data.accident_prob> 0.95) {
+					$('#accident-button').prop('disabled', false);
+				}
+			});
+		});
+    </script>
+  </body>
+</html>
